@@ -1,0 +1,30 @@
+<nav>
+  <mat-toolbar color="primary">
+    <a
+      mat-button
+      routerLink=""
+      routerLinkActive="nav-selected"
+      [routerLinkActiveOptions]="{ exact: true }"
+      ><mat-icon>home</mat-icon><span>Dashboard</span
+      ><span class="mat-button-focus-overlay"></span
+    ></a>
+
+    <a mat-button routerLink="about" routerLinkActive="nav-selected"
+      ><span>About</span><span class="mat-button-focus-overlay"></span
+    ></a>
+
+    <a mat-button routerLink="contact" routerLinkActive="nav-selected"
+      ><span>Contact</span><span class="mat-button-focus-overlay"></span
+    ></a>
+
+    <span class="example-spacer"></span>
+
+    <button
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with share icon"
+    >
+      <mat-icon>share</mat-icon>
+    </button>
+  </mat-toolbar>
+</nav>

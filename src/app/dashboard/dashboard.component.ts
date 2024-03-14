@@ -12,8 +12,8 @@ export class DashboardComponent {
   constructor(private http: HttpClient) {}
 
   testApi(): void {
-    this.http.get('/test').subscribe((response) => {
-      //console.log(response);
+    this.http.get('http://localhost:3000/test').subscribe((response) => {
+      console.log(response);
     });
   }
 }

@@ -13,8 +13,10 @@
   </mat-card-content>
 </mat-card>
 
-<mat-list role="list">
-  <mat-list-item role="listitem" *ngFor="let file of uploadedFiles">{{
-    file
-  }}</mat-list-item>
-</mat-list>
+<mat-selection-list #files>
+  @for (file of uploadedFiles; track file) {
+  <mat-list-option>{{ file }}</mat-list-option>
+  }
+</mat-selection-list>
+
+<p>Options selected: {{ files.selectedOptions.selected.length }}</p>

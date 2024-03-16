@@ -25,4 +25,8 @@ export class FilesService {
   getFiles(): Observable<any> {
     return this.http.get(`${this.baseUrl}/files`);
   }
+
+  getExcelSheets(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/read-excel`);
+  }
 }

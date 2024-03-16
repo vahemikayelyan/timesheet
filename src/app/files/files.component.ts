@@ -52,6 +52,7 @@ export class FilesComponent {
 
   getFiles() {
     this.http.get('http://localhost:3000/files').subscribe((response: any) => {
+      console.log(response);
       this.uploadedFiles = response.files;
     });
   }

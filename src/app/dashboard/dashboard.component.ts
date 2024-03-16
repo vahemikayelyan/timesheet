@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { FilesService } from '../files/files.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,10 +9,10 @@ import { Component } from '@angular/core';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
-  constructor(private http: HttpClient) {}
+  constructor(private filesService: FilesService) {}
 
-  testApi(): void {
-    this.http.get('http://localhost:3000/test').subscribe((response) => {
+  ngOnInit() {
+    this.filesService.getExcelSheets().subscribe((response) => {
       console.log(response);
     });
   }

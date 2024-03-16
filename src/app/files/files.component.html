@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-title>Multi File Upload</mat-card-title>
+    <input #fileInput type="file" (change)="onFileSelected($event)" multiple />
+    <button
+      color="primary"
+      mat-raised-button
+      (click)="onUpload()"
+      [disabled]="!selectedFiles.length"
+    >
+      Upload
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-list role="list">
+  <mat-list-item role="listitem" *ngFor="let file of uploadedFiles">{{
+    file
+  }}</mat-list-item>
+</mat-list>

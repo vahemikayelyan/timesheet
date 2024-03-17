@@ -12,6 +12,27 @@
   </mat-tab>
   <mat-tab label="Grid View">
     <div class="mat-table mat-elevation-z8">
+      <div>
+        <mat-form-field>
+          <mat-label>Staff Selector</mat-label>
+          <mat-select (selectionChange)="handleStaffChange($event)">
+            <mat-option value="all">All</mat-option>
+            @for (item of accordionDataSource; track item) {
+            <mat-option [value]="item.staff">{{ item.staff }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="margin-left: 1rem">
+          <mat-label>Discipline Selector</mat-label>
+          <mat-select (selectionChange)="handleDisciplineChange($event)">
+            <mat-option value="all">All</mat-option>
+            @for (discipline of disciplines; track discipline) {
+            <mat-option [value]="discipline">{{ discipline }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
       <table mat-table matSort [dataSource]="tableDataSource">
         <ng-container
           *ngFor="let colName of displayedColumns"
@@ -29,7 +50,7 @@
 
       <mat-paginator
         [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 20]"
+        [pageSizeOptions]="[5, 10, tableDataSource.data.length]"
         showFirstLastButtons
         aria-label="Select page of periodic elements"
       >

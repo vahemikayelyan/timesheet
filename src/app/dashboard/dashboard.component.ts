@@ -6,6 +6,9 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +20,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatTabsModule,
     MatExpansionModule,
     MatSortModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -24,6 +30,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 export class DashboardComponent {
   panelOpenState?: boolean;
   rowData: SheetRow[] = [];
+  disciplines: string[] = [];
   displayedColumns: string[] = [];
   accordionDataSource: { staff: string; rows: SheetRow[] }[] = [];
   tableDataSource = new MatTableDataSource<SheetRow>();
@@ -53,6 +60,10 @@ export class DashboardComponent {
         } else {
           this.accordionDataSource.push({ staff: row.Staff, rows: [row] });
         }
+
+        if (!this.disciplines.includes(row.Discipline)) {
+          this.disciplines.push(row.Discipline);
+        }
       });
     });
   }
@@ -63,6 +74,26 @@ export class DashboardComponent {
     }
     if (this.sort) {
       this.tableDataSource.sort = this.sort;
+    }
+  }
+
+  handleStaffChange($event: MatSelectChange) {
+    if ($event.value === 'all') {
+      this.tableDataSource.data = this.rowData;
+    } else {
+      this.tableDataSource.data = this.rowData.filter(
+        (row) => row.Staff === $event.value
+      );
+    }
+  }
+
+  handleDisciplineChange($event: MatSelectChange) {
+    if ($event.value === 'all') {
+      this.tableDataSource.data = this.rowData;
+    } else {
+      this.tableDataSource.data = this.rowData.filter(
+        (row) => row.Discipline === $event.value
+      );
     }
   }
 }

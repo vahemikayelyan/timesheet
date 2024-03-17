@@ -4,6 +4,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import XLSX, { Sheet2JSONOpts } from 'xlsx';
+import BodyParser from 'body-parser';
 
 const app: Express = express();
 const host = 'http://localhost';
@@ -11,6 +12,9 @@ const port = 3000;
 
 // Use it before all route definitions
 app.use(cors({ origin: `${host}:4200` }));
+
+app.use(BodyParser.json());
+app.use(BodyParser.urlencoded({ extended: true }));
 
 // Check if uploads directory exists, if not, create it
 const folderName = 'uploads';
@@ -32,14 +36,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // File upload endpoint
-app.post('/upload', upload.array('files'), (_req, res) => {
+app.post('/files', upload.array('files'), (_req, res) => {
   res.json({ message: 'Files uploaded successfully' });
 });
 
 app.get('/files', (_req, res) => {
-  const uploadsDirectory = `./${folderName}`;
-
-  fs.readdir(uploadsDirectory, (err, files) => {
+  fs.readdir(uploadsDir, (err, files) => {
     if (err) {
       return res
         .status(500)
@@ -50,10 +52,34 @@ app.get('/files', (_req, res) => {
   });
 });
 
-app.get('/read-excel', (_req, res) => {
-  const folderPath = `./${folderName}`;
+app.delete('/files', (req, res) => {
+  const fileList: string[] = req.body.files;
+  const deletionSummary: { success: string[]; failed: string[] } = {
+    success: [],
+    failed: [],
+  };
 
-  fs.readdir(folderPath, (err, files) => {
+  fileList.forEach((fileName) => {
+    const filePath = path.join(uploadsDir, fileName);
+
+    // Check if file exists before attempting to delete
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+        deletionSummary.success.push(fileName);
+      } catch (err) {
+        deletionSummary.failed.push(fileName);
+      }
+    } else {
+      deletionSummary.failed.push(fileName);
+    }
+  });
+
+  res.json(deletionSummary);
+});
+
+app.get('/read-excel', (_req, res) => {
+  fs.readdir(uploadsDir, (err, files) => {
     if (err) {
       console.error('Could not list the directory.', err);
 
@@ -65,7 +91,7 @@ app.get('/read-excel', (_req, res) => {
     const allData: { name: string; rows: any[] }[] = [];
 
     files.forEach((file) => {
-      const filePath = path.join(folderPath, file);
+      const filePath = path.join(uploadsDir, file);
 
       // Make sure the file is an Excel file
       if (filePath.endsWith('.xlsx') || filePath.endsWith('.xls')) {

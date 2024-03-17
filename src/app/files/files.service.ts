@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,23 +7,20 @@ import { Observable } from 'rxjs';
 })
 export class FilesService {
   private baseUrl = 'http://localhost:3000';
+  private FILES_API = this.baseUrl + '/files';
 
   constructor(private http: HttpClient) {}
 
-  upload(file: File): Observable<HttpEvent<any>> {
-    const formData: FormData = new FormData();
-
-    formData.append('file', file);
-
-    const req = new HttpRequest('POST', `${this.baseUrl}/upload`, formData, {
-      responseType: 'json',
-    });
-
-    return this.http.request(req);
+  uploadFiles(formData: FormData): Observable<any> {
+    return this.http.post(this.FILES_API, formData);
   }
 
   getFiles(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/files`);
+    return this.http.get(this.FILES_API);
+  }
+
+  deleteFiles(files: string[]): Observable<any> {
+    return this.http.delete(this.FILES_API, { body: { files } });
   }
 
   getExcelSheets(): Observable<ExcellSheet[]> {

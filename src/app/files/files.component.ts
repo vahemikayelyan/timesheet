@@ -1,9 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
+import { MatListModule, MatListOption } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
+import { FilesService } from './files.service';
 
 @Component({
   selector: 'app-files',
@@ -14,10 +14,13 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class FilesComponent {
   @ViewChild('fileInput') fileInput?: ElementRef;
+
   selectedFiles: File[] = [];
   uploadedFiles: string[] = [];
 
-  constructor(private http: HttpClient) {
+  constructor(private filesService: FilesService) {}
+
+  ngOnInit() {
     this.getFiles();
   }
 
@@ -33,7 +36,7 @@ export class FilesComponent {
         formData.append('files', file);
       }
 
-      this.http.post('http://localhost:3000/upload', formData).subscribe(() => {
+      this.filesService.uploadFiles(formData).subscribe(() => {
         this.selectedFiles = [];
         this.resetFileInput();
         this.getFiles();
@@ -51,9 +54,15 @@ export class FilesComponent {
   }
 
   getFiles() {
-    this.http.get('http://localhost:3000/files').subscribe((response: any) => {
-      console.log(response);
+    this.filesService.getFiles().subscribe((response: any) => {
       this.uploadedFiles = response.files;
+    });
+  }
+
+  deleteFiles(selectedFiles: MatListOption[]) {
+    const files = selectedFiles?.map((f) => f.value);
+    this.filesService.deleteFiles(files).subscribe((response) => {
+      this.getFiles();
     });
   }
 }

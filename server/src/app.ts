@@ -3,7 +3,7 @@ import multer from 'multer';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
-import XLSX from 'xlsx';
+import XLSX, { Sheet2JSONOpts } from 'xlsx';
 
 const app: Express = express();
 const host = 'http://localhost';
@@ -62,22 +62,24 @@ app.get('/read-excel', (_req, res) => {
         .send('Internal Server Error when reading directory');
     }
 
-    const allData: { file: string; data: any[] }[] = [];
+    const allData: { name: string; rows: any[] }[] = [];
 
     files.forEach((file) => {
       const filePath = path.join(folderPath, file);
 
       // Make sure the file is an Excel file
       if (filePath.endsWith('.xlsx') || filePath.endsWith('.xls')) {
-        const workbook = XLSX.readFile(filePath);
+        const workbook = XLSX.readFile(filePath, { dateNF: 'mm/dd/yyyy' });
         const sheetNames = workbook.SheetNames;
+        const jsonOptions: Sheet2JSONOpts = { raw: false };
 
         // Assuming you want to read the first sheet only
         const sheetData = XLSX.utils.sheet_to_json(
-          workbook.Sheets[sheetNames[0]]
+          workbook.Sheets[sheetNames[0]],
+          jsonOptions
         );
 
-        allData.push({ file, data: sheetData });
+        allData.push({ name: file, rows: sheetData });
       }
     });
 

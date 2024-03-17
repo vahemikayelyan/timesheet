@@ -13,10 +13,14 @@
   </mat-card-content>
 </mat-card>
 
-<mat-selection-list #files>
-  @for (file of uploadedFiles; track file) {
-  <mat-list-option>{{ file }}</mat-list-option>
-  }
-</mat-selection-list>
+<mat-card-content>
+  <mat-selection-list #files style="padding: 0; margin: 0">
+    @for (file of uploadedFiles; track file) {
+    <mat-list-option>{{ file }}</mat-list-option>
+    }
+  </mat-selection-list>
 
-<p>Options selected: {{ files.selectedOptions.selected.length }}</p>
+  <p style="padding-left: 16px; padding-top: 5px">
+    Files selected: {{ files.selectedOptions.selected.length }}
+  </p>
+</mat-card-content>

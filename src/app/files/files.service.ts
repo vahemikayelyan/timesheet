@@ -26,7 +26,24 @@ export class FilesService {
     return this.http.get(`${this.baseUrl}/files`);
   }
 
-  getExcelSheets(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/read-excel`);
+  getExcelSheets(): Observable<ExcellSheet[]> {
+    return this.http.get<ExcellSheet[]>(`${this.baseUrl}/read-excel`);
   }
+}
+
+export interface ExcellSheet {
+  name: string;
+  rows: SheetRow[];
+}
+
+export interface SheetRow {
+  Module: string;
+  Date: string;
+  Time: string;
+  Duration: string;
+  Staff: string;
+  Discipline: string;
+  Type: string;
+  Level: string;
+  Status: string;
 }

@@ -12,12 +12,14 @@
   </mat-tab>
   <mat-tab label="Grid View">
     <div class="mat-table mat-elevation-z8">
-      <table mat-table [dataSource]="tableDataSource">
+      <table mat-table matSort [dataSource]="tableDataSource">
         <ng-container
           *ngFor="let colName of displayedColumns"
           [matColumnDef]="colName"
         >
-          <th mat-header-cell *matHeaderCellDef>{{ colName }}</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>
+            {{ colName }}
+          </th>
           <td mat-cell *matCellDef="let element">{{ element[colName] }}</td>
         </ng-container>
 

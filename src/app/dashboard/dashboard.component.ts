@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
@@ -15,6 +16,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatPaginatorModule,
     MatTabsModule,
     MatExpansionModule,
+    MatSortModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -26,6 +28,7 @@ export class DashboardComponent {
   accordionDataSource: { staff: string; rows: SheetRow[] }[] = [];
   tableDataSource = new MatTableDataSource<SheetRow>();
   @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
 
   constructor(private filesService: FilesService) {}
 
@@ -57,6 +60,9 @@ export class DashboardComponent {
   ngAfterViewInit() {
     if (this.paginator) {
       this.tableDataSource.paginator = this.paginator;
+    }
+    if (this.sort) {
+      this.tableDataSource.sort = this.sort;
     }
   }
 }

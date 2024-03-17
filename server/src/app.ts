@@ -71,7 +71,7 @@ app.get('/read-excel', (_req, res) => {
       if (filePath.endsWith('.xlsx') || filePath.endsWith('.xls')) {
         const workbook = XLSX.readFile(filePath, { dateNF: 'mm/dd/yyyy' });
         const sheetNames = workbook.SheetNames;
-        const jsonOptions: Sheet2JSONOpts = { raw: false };
+        const jsonOptions: Sheet2JSONOpts = { raw: false, defval: '' };
 
         // Assuming you want to read the first sheet only
         const sheetData = XLSX.utils.sheet_to_json(

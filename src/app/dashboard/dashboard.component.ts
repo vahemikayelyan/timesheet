@@ -7,7 +7,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
@@ -28,10 +28,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
+  all: string = 'all';
   panelOpenState?: boolean;
   rowData: SheetRow[] = [];
   disciplines: string[] = [];
   displayedColumns: string[] = [];
+  selectedStaff: string = this.all;
+  selectedDiscipline: string = this.all;
   accordionDataSource: { staff: string; rows: SheetRow[] }[] = [];
   tableDataSource = new MatTableDataSource<SheetRow>();
   @ViewChild(MatPaginator) paginator?: MatPaginator;
@@ -77,23 +80,35 @@ export class DashboardComponent {
     }
   }
 
-  handleStaffChange($event: MatSelectChange) {
-    if ($event.value === 'all') {
-      this.tableDataSource.data = this.rowData;
-    } else {
-      this.tableDataSource.data = this.rowData.filter(
-        (row) => row.Staff === $event.value
-      );
+  handleFilterChange(filter?: string) {
+    if (filter === 'staff' && this.selectedDiscipline !== this.all) {
+      this.selectedDiscipline = this.all;
+    }
+
+    this.tableDataSource.data = this.rowData.filter((row) => {
+      const isStaffTrue: boolean =
+        this.selectedStaff === this.all
+          ? true
+          : row.Staff === this.selectedStaff;
+      const isDisciplineTrue: boolean =
+        this.selectedDiscipline === this.all
+          ? true
+          : row.Discipline === this.selectedDiscipline;
+
+      return isStaffTrue && isDisciplineTrue;
+    });
+
+    if (filter === 'staff') {
+      this.setDisciplines();
     }
   }
 
-  handleDisciplineChange($event: MatSelectChange) {
-    if ($event.value === 'all') {
-      this.tableDataSource.data = this.rowData;
-    } else {
-      this.tableDataSource.data = this.rowData.filter(
-        (row) => row.Discipline === $event.value
-      );
-    }
+  setDisciplines() {
+    this.disciplines = [];
+    this.tableDataSource.data.forEach((row) => {
+      if (!this.disciplines.includes(row.Discipline)) {
+        this.disciplines.push(row.Discipline);
+      }
+    });
   }
 }

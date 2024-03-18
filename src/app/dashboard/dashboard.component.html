@@ -15,8 +15,11 @@
       <div>
         <mat-form-field>
           <mat-label>Staff Selector</mat-label>
-          <mat-select (selectionChange)="handleStaffChange($event)">
-            <mat-option value="all">All</mat-option>
+          <mat-select
+            (selectionChange)="handleFilterChange('staff')"
+            [(value)]="selectedStaff"
+          >
+            <mat-option [value]="all">All</mat-option>
             @for (item of accordionDataSource; track item) {
             <mat-option [value]="item.staff">{{ item.staff }}</mat-option>
             }
@@ -25,8 +28,11 @@
 
         <mat-form-field style="margin-left: 1rem">
           <mat-label>Discipline Selector</mat-label>
-          <mat-select (selectionChange)="handleDisciplineChange($event)">
-            <mat-option value="all">All</mat-option>
+          <mat-select
+            (selectionChange)="handleFilterChange()"
+            [(value)]="selectedDiscipline"
+          >
+            <mat-option [value]="all">All</mat-option>
             @for (discipline of disciplines; track discipline) {
             <mat-option [value]="discipline">{{ discipline }}</mat-option>
             }

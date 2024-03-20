@@ -1,10 +1,10 @@
 <mat-tab-group>
   <mat-tab label="Group View">
     <mat-accordion class="example-accordion">
-      <mat-expansion-panel *ngFor="let item of accordionDataSource">
+      <mat-expansion-panel *ngFor="let item of employeesDataSource">
         <mat-expansion-panel-header>
-          <mat-panel-title>{{ item.staff }}</mat-panel-title>
-          <mat-panel-description>Staff name</mat-panel-description>
+          <mat-panel-title>{{ item.LOGIN_INITIALS }}</mat-panel-title>
+          <mat-panel-description>{{ item.NAME }}</mat-panel-description>
         </mat-expansion-panel-header>
         <p>I'm visible because I am open</p>
       </mat-expansion-panel>
@@ -14,20 +14,25 @@
     <div class="mat-table mat-elevation-z8">
       <div>
         <mat-form-field>
-          <mat-label>Staff Selector</mat-label>
+          <mat-label>Employees</mat-label>
           <mat-select
             (selectionChange)="handleFilterChange('staff')"
-            [(value)]="selectedStaff"
+            [(value)]="selectedEmployee"
           >
             <mat-option [value]="all">All</mat-option>
-            @for (item of accordionDataSource; track item) {
-            <mat-option [value]="item.staff">{{ item.staff }}</mat-option>
+            @for (employee of employeesDataSource; track
+            employee.LOGIN_INITIALS) {
+            <mat-option
+              [value]="employee.LOGIN_INITIALS"
+              style="word-wrap: normal; word-spacing: normal"
+              >{{ employee.NAME }}</mat-option
+            >
             }
           </mat-select>
         </mat-form-field>
 
         <mat-form-field style="margin-left: 1rem">
-          <mat-label>Discipline Selector</mat-label>
+          <mat-label>Disciplines</mat-label>
           <mat-select
             (selectionChange)="handleFilterChange()"
             [(value)]="selectedDiscipline"

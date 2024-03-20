@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FilesService, SheetRow } from '../files/files.service';
+import { Employee, FilesService, SheetRow } from '../files/files.service';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -33,9 +33,9 @@ export class DashboardComponent {
   rowData: SheetRow[] = [];
   disciplines: string[] = [];
   displayedColumns: string[] = [];
-  selectedStaff: string = this.all;
+  selectedEmployee: string = this.all;
   selectedDiscipline: string = this.all;
-  accordionDataSource: { staff: string; rows: SheetRow[] }[] = [];
+  employeesDataSource: Employee[] = [];
   tableDataSource = new MatTableDataSource<SheetRow>();
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -44,7 +44,7 @@ export class DashboardComponent {
 
   ngOnInit() {
     this.filesService.getExcelSheets().subscribe((response) => {
-      response.forEach((excelSheet) => {
+      response.data.forEach((excelSheet) => {
         if (!this.displayedColumns.length) {
           this.displayedColumns = Object.keys(excelSheet.rows[0]);
         }
@@ -54,14 +54,21 @@ export class DashboardComponent {
       this.tableDataSource.data = this.rowData;
 
       this.rowData.forEach((row) => {
-        const staffData = this.accordionDataSource.find(
-          (item) => item.staff === row.Staff
+        const employeeData = this.employeesDataSource.find(
+          (e) => e.LOGIN_INITIALS === row.Staff
         );
 
-        if (staffData) {
-          staffData.rows.push(row);
+        if (employeeData) {
+          employeeData.LOGS!.push(row);
         } else {
-          this.accordionDataSource.push({ staff: row.Staff, rows: [row] });
+          const employee = response.employees.find(
+            (e) => e.LOGIN_INITIALS === row.Staff
+          );
+          this.employeesDataSource.push({
+            ...employee,
+            LOGIN_INITIALS: row.Staff,
+            LOGS: [row],
+          });
         }
 
         if (!this.disciplines.includes(row.Discipline)) {
@@ -87,9 +94,9 @@ export class DashboardComponent {
 
     this.tableDataSource.data = this.rowData.filter((row) => {
       const isStaffTrue: boolean =
-        this.selectedStaff === this.all
+        this.selectedEmployee === this.all
           ? true
-          : row.Staff === this.selectedStaff;
+          : row.Staff === this.selectedEmployee;
       const isDisciplineTrue: boolean =
         this.selectedDiscipline === this.all
           ? true

@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import XLSX, { Sheet2JSONOpts } from 'xlsx';
+import XLSX from 'xlsx';
 import BodyParser from 'body-parser';
 import multer from 'multer';
 import cors from 'cors';
@@ -34,6 +34,24 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+function getEmployeeList() {
+  const empWorkbook = XLSX.readFile(
+    __dirname + '../../../src/assets/employee_list.xls'
+  );
+  const empSheet = empWorkbook.Sheets[empWorkbook.SheetNames[0]];
+  const headers: string[][] = XLSX.utils.sheet_to_json(empSheet, {
+    header: 1,
+  });
+
+  const employees: any[] = XLSX.utils.sheet_to_json(empSheet, {
+    header: headers[0].map((h) => h.split(' ').join('_')),
+    raw: false,
+    defval: '',
+  });
+
+  return employees;
+}
 
 // File upload endpoint
 app.post('/api/files', upload.array('files'), (_req, res) => {
@@ -97,19 +115,20 @@ app.get('/api/read-excel', (_req, res) => {
       if (filePath.endsWith('.xlsx') || filePath.endsWith('.xls')) {
         const workbook = XLSX.readFile(filePath, { dateNF: 'mm/dd/yyyy' });
         const sheetNames = workbook.SheetNames;
-        const jsonOptions: Sheet2JSONOpts = { raw: false, defval: '' };
 
         // Assuming you want to read the first sheet only
         const sheetData = XLSX.utils.sheet_to_json(
           workbook.Sheets[sheetNames[0]],
-          jsonOptions
+          { raw: false, defval: '' }
         );
 
         allData.push({ name: file, rows: sheetData });
       }
     });
 
-    res.json(allData);
+    const employees = getEmployeeList();
+
+    res.json({ data: allData, employees });
   });
 });
 

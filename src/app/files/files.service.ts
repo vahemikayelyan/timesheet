@@ -23,9 +23,14 @@ export class FilesService {
     return this.http.delete(this.FILES_API, { body: { files } });
   }
 
-  getExcelSheets(): Observable<ExcellSheet[]> {
-    return this.http.get<ExcellSheet[]>(`${this.baseUrl}/read-excel`);
+  getExcelSheets(): Observable<DashboardResponse> {
+    return this.http.get<DashboardResponse>(`${this.baseUrl}/read-excel`);
   }
+}
+
+export interface DashboardResponse {
+  data: ExcellSheet[];
+  employees: Employee[];
 }
 
 export interface ExcellSheet {
@@ -43,4 +48,15 @@ export interface SheetRow {
   Type: string;
   Level: string;
   Status: string;
+}
+
+export interface Employee {
+  NAME?: string;
+  LOGIN_INITIALS?: string;
+  ACCESS_LEVEL?: string;
+  DISCIPLINE?: string;
+  PHONE?: string;
+  LICENSE?: string;
+  EMAIL?: string;
+  LOGS?: SheetRow[];
 }

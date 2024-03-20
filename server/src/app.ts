@@ -16,7 +16,7 @@ app.use(cors({ origin: [`${host}:4200`, 'http://127.0.0.1:4200'] }));
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 
-const STATIC_FILES = path.join(__dirname, '../../dist/timesheet/browser');
+const STATIC_FILES = path.join(__dirname, '../browser');
 const folderName = 'uploads';
 const uploadsDir = `./${folderName}`;
 

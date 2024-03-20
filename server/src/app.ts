@@ -37,7 +37,7 @@ const upload = multer({ storage: storage });
 
 function getEmployeeList() {
   const empWorkbook = XLSX.readFile(
-    __dirname + '../../../src/assets/employee_list.xls'
+    path.join(STATIC_FILES, 'assets/employee_list.xls')
   );
   const empSheet = empWorkbook.Sheets[empWorkbook.SheetNames[0]];
   const headers: string[][] = XLSX.utils.sheet_to_json(empSheet, {

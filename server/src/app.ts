@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import XLSX, { Sheet2JSONOpts } from 'XLSX';
+import XLSX, { Sheet2JSONOpts } from 'xlsx';
 import BodyParser from 'body-parser';
 import multer from 'multer';
 import cors from 'cors';

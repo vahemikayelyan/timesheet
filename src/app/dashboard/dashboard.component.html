@@ -1,13 +1,29 @@
 <mat-tab-group>
   <mat-tab label="Group View">
     <mat-accordion class="example-accordion">
-      <mat-expansion-panel *ngFor="let item of employeesDataSource">
+      @for (employee of employeesDataSource; track employee.LOGIN_INITIALS) {
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>{{ item.LOGIN_INITIALS }}</mat-panel-title>
-          <mat-panel-description>{{ item.NAME }}</mat-panel-description>
+          <mat-panel-title [class.has-error]="employee.errors?.length">{{
+            employee.NAME
+          }}</mat-panel-title>
+          <mat-panel-description>{{
+            employee.LOGIN_INITIALS
+          }}</mat-panel-description>
+          <mat-panel-description>{{
+            employee.DISCIPLINE
+          }}</mat-panel-description>
         </mat-expansion-panel-header>
-        <p>I'm visible because I am open</p>
+        <p>
+          <span style="font-weight: 500">Available Logs:</span>
+          {{ employee.firstLog | date : "E MM/dd/yy" }} -
+          {{ employee.lastLog | date : "E MM/dd/yy" }}
+        </p>
+        @for (error of employee.errors; track error) {
+        <div>{{ error }}</div>
+        }
       </mat-expansion-panel>
+      }
     </mat-accordion>
   </mat-tab>
   <mat-tab label="Grid View">

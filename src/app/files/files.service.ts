@@ -48,6 +48,7 @@ export interface SheetRow {
   Type: string;
   Level: string;
   Status: string;
+  weekNo?: number;
 }
 
 export interface Employee {
@@ -58,5 +59,8 @@ export interface Employee {
   PHONE?: string;
   LICENSE?: string;
   EMAIL?: string;
-  LOGS?: SheetRow[];
+  logs: SheetRow[];
+  errors?: string[];
+  firstLog?: string;
+  lastLog?: string;
 }
